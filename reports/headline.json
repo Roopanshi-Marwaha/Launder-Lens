@@ -1,0 +1,86 @@
+{
+  "amlsim": {
+    "gnn_all": {
+      "f1_mean": 0.755,
+      "ap_mean": 0.851,
+      "recall_mean": 0.754
+    },
+    "gnn_structure": {
+      "f1_mean": 0.643,
+      "ap_mean": 0.737,
+      "recall_mean": 0.634
+    },
+    "rf_all": {
+      "f1_mean": 0.879,
+      "ap_mean": 0.942,
+      "recall_mean": 0.831
+    },
+    "rules": {
+      "f1_mean": 0.326,
+      "ap_mean": 0.22,
+      "recall_mean": 0.699
+    },
+    "xgb_all": {
+      "f1_mean": 0.895,
+      "ap_mean": 0.945,
+      "recall_mean": 0.867
+    },
+    "xgb_amount": {
+      "f1_mean": 0.841,
+      "ap_mean": 0.894,
+      "recall_mean": 0.785
+    },
+    "xgb_structure": {
+      "f1_mean": 0.722,
+      "ap_mean": 0.825,
+      "recall_mean": 0.693
+    }
+  },
+  "amlsim_shap_share": {
+    "amount": 0.514,
+    "structure": 0.355,
+    "timing": 0.132
+  },
+  "robustness": {
+    "gnn_structure": {
+      "clean_ap": 0.7005030836192088,
+      "camo_ap": 0.7006569954441948,
+      "worst_ap": 0.5710480807676189
+    },
+    "gnn_structure_hardened": {
+      "clean_ap": 0.7036508066837903,
+      "camo_ap": 0.7213715175492503,
+      "worst_ap": 0.6218414670746928
+    },
+    "rules": {
+      "clean_ap": 0.17413149679054965,
+      "camo_ap": 0.1058354895770473,
+      "worst_ap": 0.09986326160674545
+    },
+    "xgb_all": {
+      "clean_ap": 0.9626442959234334,
+      "camo_ap": 0.3798060568917023,
+      "worst_ap": 0.3670317694201567
+    },
+    "xgb_all_hardened": {
+      "clean_ap": 0.9407195303293063,
+      "camo_ap": 0.7409019777842951,
+      "worst_ap": 0.6608266043973519
+    },
+    "xgb_amount": {
+      "clean_ap": 0.8832060848178376,
+      "camo_ap": 0.18956302243611314,
+      "worst_ap": 0.18956302243611314
+    },
+    "xgb_structure": {
+      "clean_ap": 0.7421182338522774,
+      "camo_ap": 0.7464218492458727,
+      "worst_ap": 0.579573789817397
+    },
+    "xgb_structure_hardened": {
+      "clean_ap": 0.7551997540975117,
+      "camo_ap": 0.7685238209821252,
+      "worst_ap": 0.6309890134267068
+    }
+  }
+}
