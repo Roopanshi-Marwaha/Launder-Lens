@@ -91,8 +91,73 @@ hr{border-color:var(--line)}
 """
 
 
+CSS_FX = r"""
+<style>
+@property --ang{syntax:'<angle>';initial-value:0deg;inherits:false}
+/* film grain + soft vignette */
+.stApp:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.07;mix-blend-mode:overlay;
+background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-track{background:var(--ink)}::-webkit-scrollbar-thumb{background:#1c2633;border-radius:8px;border:2px solid var(--ink)}::-webkit-scrollbar-thumb:hover{background:var(--signal)}
+::selection{background:var(--signal);color:#fff}
+/* staggered entrance */
+@keyframes rise{from{opacity:0;transform:translateY(18px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.pagehead,.hero,.insight,.case,.card,.flow,.legend{animation:rise .75s cubic-bezier(.2,.7,.2,1) backwards}
+.kpi{animation:rise .75s cubic-bezier(.2,.7,.2,1) backwards}
+.kpi:nth-child(2){animation-delay:.08s}.kpi:nth-child(3){animation-delay:.16s}.kpi:nth-child(4){animation-delay:.24s}.kpi:nth-child(5){animation-delay:.32s}
+/* hero: rotating border light + scanner sweep + glitch */
+.hero:after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;
+background:conic-gradient(from var(--ang),transparent 0 62%,var(--signal) 78%,var(--teal) 92%,transparent);
+-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spin 7s linear infinite}
+@keyframes spin{to{--ang:360deg}}
+.hero:before{content:"";position:absolute;left:0;right:0;height:140px;top:-140px;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(61,214,192,.07),transparent);animation:scan 8s linear infinite}
+@keyframes scan{to{top:110%}}
+.hero h1 em{display:inline-block;animation:glitch 6s infinite}
+@keyframes glitch{0%,91%,100%{text-shadow:none;transform:none}92%{text-shadow:-3px 0 var(--teal),3px 0 var(--steel);transform:translateX(2px) skewX(-4deg)}94%{text-shadow:3px 0 var(--teal),-3px 0 var(--steel);transform:translateX(-2px)}96%{text-shadow:-2px 0 var(--amber);transform:none}}
+/* cards: tilt + cursor spotlight */
+.kpi,.card,.case{position:relative;transform:perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .18s ease-out,border-color .25s,box-shadow .25s}
+.kpi:after,.card:after,.case:after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;opacity:0;transition:opacity .25s;background:radial-gradient(280px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.08),transparent 60%)}
+.kpi:hover:after,.card:hover:after,.case:hover:after{opacity:1}
+.kpi:hover,.card:hover{border-color:rgba(255,90,60,.4);box-shadow:0 14px 40px -18px rgba(255,90,60,.55)}
+.kpi .v{text-shadow:0 0 26px color-mix(in srgb,var(--accent,#6f9bff) 45%,transparent)}
+/* buttons: shine sweep */
+.stButton>button,.stFormSubmitButton>button{position:relative;overflow:hidden}
+.stButton>button:after,.stFormSubmitButton>button:after{content:"";position:absolute;top:0;bottom:0;width:60%;left:-80%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);transform:skewX(-20deg);transition:left .6s}
+.stButton>button:hover:after,.stFormSubmitButton>button:hover:after{left:130%}
+.stButton>button:active{transform:scale(.97)}
+/* sidebar nav */
+[data-testid="stSidebar"] div[role="radiogroup"]>label:hover{transform:translateX(4px)}
+[data-testid="stSidebar"] div[role="radiogroup"]>label:has(input:checked){box-shadow:inset 3px 0 0 var(--signal),0 0 24px -8px rgba(255,90,60,.6)}
+/* cursor glow */
+.ll-orb{position:fixed;top:0;left:0;width:320px;height:320px;border-radius:50%;pointer-events:none;z-index:2;opacity:0;transition:opacity .5s;mix-blend-mode:screen;background:radial-gradient(circle,rgba(255,90,60,.14),rgba(61,214,192,.05) 45%,transparent 68%)}
+.element-container:has(iframe[height="0"]){position:absolute;height:0;overflow:hidden;margin:0}
+/* transaction tape */
+.tape{position:fixed;left:0;right:0;bottom:0;height:30px;z-index:60;display:flex;flex-direction:row-reverse;align-items:center;overflow:hidden;pointer-events:none;border-top:1px solid var(--line);background:rgba(7,10,15,.88);backdrop-filter:blur(8px);font:500 .68rem var(--mono);color:var(--muted);letter-spacing:.05em}
+.tape .lab{flex:none;height:100%;display:flex;align-items:center;gap:.45rem;padding:0 .9rem;border-left:1px solid var(--line);background:var(--ink);color:var(--signal);text-transform:uppercase;letter-spacing:.16em}
+.tape-in{display:flex;gap:2.4rem;white-space:nowrap;padding-left:2rem;animation:tape 80s linear infinite}
+@keyframes tape{to{transform:translateX(-50%)}}
+.tape b.f{color:var(--signal)}.tape b.o{color:var(--teal)}
+/* responsive */
+@media (max-width:900px){
+.block-container{padding:1rem .9rem 4.5rem!important}
+.hero{padding:1.4rem 1.2rem 1.3rem;border-radius:16px}.hero p{font-size:.95rem}
+.pagehead h1{font-size:1.7rem!important}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}.kpi .v{font-size:1.6rem}
+.stTabs [data-baseweb="tab-list"]{overflow-x:auto;flex-wrap:nowrap}.stTabs [data-baseweb="tab"]{white-space:nowrap}
+.flow .st{font-size:.78rem;padding:.4rem .65rem}}
+@media (max-width:640px){
+.kpis{grid-template-columns:1fr 1fr}.kpi{padding:.8rem .85rem}.kpi .v{font-size:1.4rem}
+.act{flex-direction:column;gap:.3rem}.tape{display:none}
+div[data-testid="stForm"]{padding:.8rem}}
+@media (pointer:coarse){.kpi,.card,.case{transform:none!important}.ll-orb{display:none}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+"""
+
+
 def inject_css():
-    st.markdown(CSS, unsafe_allow_html=True)
+    st.markdown(CSS + CSS_FX, unsafe_allow_html=True)
+    fx()
+    tape()
 
 
 def brand():
@@ -205,3 +270,49 @@ x.strokeStyle='rgba(61,214,192,.75)';x.lineWidth=2;x.beginPath();x.arc(lx,ly,lr,
 x.strokeStyle='rgba(61,214,192,.75)';x.lineWidth=5;x.lineCap='round';x.beginPath();x.moveTo(lx+lr*.72,ly+lr*.72);x.lineTo(lx+lr*1.12,ly+lr*1.12);x.stroke();
 requestAnimationFrame(frame)}frame();</script></body></html>"""
     embed(html, height)
+
+
+FX_JS = r"""<script>
+(function(){var P;try{P=window.parent;void P.document.body}catch(e){return}
+if(P.__llfx)return;P.__llfx=1;
+var D=P.document,fine=P.matchMedia('(pointer:fine)').matches,calm=P.matchMedia('(prefers-reduced-motion:reduce)').matches;
+if(fine&&!calm){var o=D.createElement('div');o.className='ll-orb';D.body.appendChild(o);var tx=0,ty=0,cx=0,cy=0;
+D.addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY;o.style.opacity=1;
+var el=e.target.closest&&e.target.closest('.kpi,.card,.case');if(!el)return;var r=el.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+el.style.setProperty('--mx',x+'px');el.style.setProperty('--my',y+'px');
+if(el.classList.contains('kpi')){el.style.setProperty('--ry',((x/r.width-.5)*10)+'deg');el.style.setProperty('--rx',((.5-y/r.height)*10)+'deg')}});
+D.addEventListener('mouseout',function(e){var el=e.target.closest&&e.target.closest('.kpi');
+if(el&&!el.contains(e.relatedTarget)){el.style.setProperty('--rx','0deg');el.style.setProperty('--ry','0deg')}});
+(function loop(){cx+=(tx-cx)*.12;cy+=(ty-cy)*.12;o.style.transform='translate('+(cx-160)+'px,'+(cy-160)+'px)';P.requestAnimationFrame(loop)})()}
+function ease(t){return 1-Math.pow(1-t,3)}
+function count(el){if(calm)return;var m=el.textContent.trim().match(/^([^\d-]*)(-?[\d,]*\.?\d+)([\s\S]*)$/);if(!m)return;
+var raw=m[2],end=parseFloat(raw.replace(/,/g,'')),dec=(raw.split('.')[1]||'').length,comma=raw.indexOf(',')>-1,pre=m[1],suf=m[3],t0=null;
+function fmt(v){var s=v.toFixed(dec);if(comma){var p=s.split('.');p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');s=p.join('.')}return pre+s+suf}
+function step(ts){if(t0===null)t0=ts;var k=Math.min((ts-t0)/900,1);el.textContent=fmt(end*ease(k));if(k<1)P.requestAnimationFrame(step);else el.textContent=m[0]}
+P.requestAnimationFrame(step)}
+function scan(){D.querySelectorAll('.kpi .v:not([data-cu])').forEach(function(el){el.setAttribute('data-cu','1');count(el)})}
+new P.MutationObserver(scan).observe(D.body,{childList:true,subtree:true});scan()})();
+</script>"""
+
+
+def fx():
+    """Cursor glow, card tilt/spotlight and KPI count-up. Runs once per browser tab (guarded)."""
+    try:
+        components.html(FX_JS, height=0)
+    except Exception:
+        embed(FX_JS, 1)
+
+
+def tape():
+    """Fixed bottom ticker of simulated transactions (decorative)."""
+    import random
+    r = random.Random(7)
+    items = []
+    for _ in range(18):
+        a, b, amt = r.randint(1000, 9999), r.randint(1000, 9999), r.choice([240, 560, 1310, 2875, 4120, 9400, 9940, 18650])
+        k = r.random()
+        tag = ('<b class="f">FLAGGED</b>' if k < .22 else f'<b class="f">RING #{r.randint(1, 40)}</b>' if k < .3 else '<b class="o">CLEARED</b>')
+        items.append(f'<span>TX {a} &rarr; {b} &middot; ${amt:,} &middot; {tag}</span>')
+    row = "".join(items)
+    st.markdown(f'<div class="tape"><div class="lab"><span class="live"></span>simulated tape</div>'
+                f'<div class="tape-in">{row}{row}</div></div>', unsafe_allow_html=True)
