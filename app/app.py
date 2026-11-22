@@ -15,7 +15,7 @@ import ui_kit as ui
 from ui_kit import C, label, color
 from graph_views import detection_graph, ring_graph, STATUS
 
-st.set_page_config(page_title="Launder Lens 2.0", page_icon="🔎", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Launder Lens 2.0", page_icon="🔎", layout="wide", initial_sidebar_state="auto")
 ui.inject_css()
 
 SCEN_LABEL = {"naive": "Naive launderer", "camouflaged": "Camouflaged amounts", "patient": "Camouflaged + patient"}
@@ -405,8 +405,21 @@ def page_evidence():
 # ------------------------------------------------------------------ router
 PAGES = {"Mission Control": page_home, "Simulation Lab": page_lab, "Time Machine": page_time,
          "Case Desk": page_case, "Evidence Lab": page_evidence}
+NAV_ICON = {"Mission Control": "🛰️", "Simulation Lab": "🧪", "Time Machine": "⏱️", "Case Desk": "🗂️", "Evidence Lab": "📊"}
+
+
+def sidebar_status():
+    n_csv = len(list(REPORTS_DIR.glob("*.csv")))
+    n_scen = sum((ARTIFACTS_DIR / f"scenario_{s}.pkl").exists() for s in SCEN_LABEL)
+    has_models = (MODELS_DIR / "lab_models.joblib").exists()
+    ui.status_panel([("Lab models", has_models, "ready" if has_models else "missing"),
+                     ("Result tables", n_csv >= 7, f"{n_csv} files"),
+                     ("Showcase scenarios", n_scen == len(SCEN_LABEL), f"{n_scen}/{len(SCEN_LABEL)}")])
+
+
 with st.sidebar:
     ui.brand()
-    nav = st.radio("Navigate", list(PAGES), label_visibility="collapsed")
+    nav = st.radio("Navigate", list(PAGES), label_visibility="collapsed", format_func=lambda p: f"{NAV_ICON[p]}  {p}")
+    sidebar_status()
     st.markdown('<div class="side-note">IBM AMLSim · 10,000 accounts · 1.32M transfers<br>Simulator · 5 laundering typologies<br>XGBoost · Random Forest · SIGN-GNN · TreeSHAP</div>', unsafe_allow_html=True)
 PAGES[nav]()

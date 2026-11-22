@@ -154,8 +154,49 @@ div[data-testid="stForm"]{padding:.8rem}}
 """
 
 
+CSS_NAV = r"""
+<style>
+/* sidebar navigation: works with both the old and the new Streamlit radio markup */
+[data-testid="stSidebar"] [role="radiogroup"]{gap:.25rem!important}
+[data-testid="stSidebar"] label[data-testid="stRadioOption"]{width:100%;padding:.62rem .9rem;border-radius:12px;border:1px solid transparent;
+transition:background .15s,border-color .15s,transform .15s,box-shadow .15s;cursor:pointer;margin:0}
+[data-testid="stSidebar"] label[data-testid="stRadioOption"]>div>div:first-child{display:none!important}
+[data-testid="stSidebar"] label[data-testid="stRadioOption"]:hover{background:rgba(255,255,255,.05);transform:translateX(4px)}
+[data-testid="stSidebar"] label[data-testid="stRadioOption"][data-selected="true"]{background:linear-gradient(90deg,rgba(255,90,60,.20),rgba(255,90,60,.03));
+border-color:rgba(255,90,60,.4);box-shadow:inset 3px 0 0 var(--signal),0 0 24px -8px rgba(255,90,60,.6)}
+[data-testid="stSidebar"] label[data-testid="stRadioOption"] p{font:500 .95rem var(--sans)!important;margin:0}
+[data-testid="stSidebar"] label[data-testid="stRadioOption"][data-selected="true"] p{color:#fff;font-weight:600!important}
+/* keep the "open menu" button visible (hiding the toolbar used to hide it too, trapping mobile users) */
+[data-testid="stExpandSidebarButton"],[data-testid="collapsedControl"]{visibility:visible!important;opacity:1!important;z-index:100}
+[data-testid="stExpandSidebarButton"],[data-testid="collapsedControl"] button{background:rgba(14,20,28,.92);border:1px solid rgba(255,90,60,.5);
+border-radius:12px;color:#fff;box-shadow:0 0 18px -4px rgba(255,90,60,.55);backdrop-filter:blur(6px)}
+[data-testid="stExpandSidebarButton"]:hover{border-color:var(--signal);box-shadow:0 0 24px rgba(255,90,60,.5)}
+/* system status panel */
+.sysmon{margin-top:1.3rem;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,var(--panel2),var(--panel));padding:.8rem .95rem}
+.sysmon .h{font:500 .64rem var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.55rem}
+.sysmon .r{display:flex;align-items:center;justify-content:space-between;gap:.6rem;font:400 .78rem var(--sans);color:#c4cbd6;padding:.22rem 0}
+.sysmon .r b{font:500 .68rem var(--mono);letter-spacing:.06em;padding:.12rem .5rem;border-radius:99px}
+.sysmon .ok b{color:#8af0e0;background:rgba(61,214,192,.1);border:1px solid rgba(61,214,192,.4)}
+.sysmon .no b{color:#ffb4a5;background:rgba(255,90,60,.1);border:1px solid rgba(255,90,60,.5)}
+.sysmon .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:.5rem;background:var(--teal);box-shadow:0 0 8px var(--teal)}
+.sysmon .no .dot{background:var(--signal);box-shadow:0 0 8px var(--signal)}
+/* small screens: tighter hero canvas / tables / buttons */
+@media (max-width:900px){
+[data-testid="stSidebar"] label[data-testid="stRadioOption"]{padding:.8rem .9rem}
+.stButton>button{width:100%;min-height:2.8rem}
+.legend{gap:.6rem .9rem}
+.insight{font-size:.88rem}}
+@media (max-width:640px){
+h1{word-break:break-word}
+.hero h1{font-size:1.9rem!important}
+.kpi .l{font-size:.6rem}
+.sysmon{margin-top:1rem}}
+</style>
+"""
+
+
 def inject_css():
-    st.markdown(CSS + CSS_FX, unsafe_allow_html=True)
+    st.markdown(CSS + CSS_FX + CSS_NAV, unsafe_allow_html=True)
     fx()
     tape()
 
@@ -163,6 +204,13 @@ def inject_css():
 def brand():
     st.markdown('<div class="brand"><div class="mark"></div><div><div class="name">Launder Lens</div>'
                 '<div class="tag">Financial crime lab 2.0</div></div></div>', unsafe_allow_html=True)
+
+
+def status_panel(items):
+    """items: [(label, ok, detail)] -> small 'system status' card for the sidebar."""
+    rows = "".join(f'<div class="r {"ok" if ok else "no"}"><span><span class="dot"></span>{l}</span><b>{d}</b></div>'
+                   for l, ok, d in items)
+    st.markdown(f'<div class="sysmon"><div class="h">System status</div>{rows}</div>', unsafe_allow_html=True)
 
 
 def page_head(kicker, title, sub):
@@ -290,6 +338,8 @@ var raw=m[2],end=parseFloat(raw.replace(/,/g,'')),dec=(raw.split('.')[1]||'').le
 function fmt(v){var s=v.toFixed(dec);if(comma){var p=s.split('.');p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');s=p.join('.')}return pre+s+suf}
 function step(ts){if(t0===null)t0=ts;var k=Math.min((ts-t0)/900,1);el.textContent=fmt(end*ease(k));if(k<1)P.requestAnimationFrame(step);else el.textContent=m[0]}
 P.requestAnimationFrame(step)}
+D.addEventListener('click',function(e){var o=e.target.closest&&e.target.closest('[data-testid="stSidebar"] label[data-testid="stRadioOption"]');
+if(!o||P.innerWidth>900)return;P.setTimeout(function(){var b=D.querySelector('[data-testid="stSidebarCollapseButton"] button');if(b)b.click()},450)},true);
 function scan(){D.querySelectorAll('.kpi .v:not([data-cu])').forEach(function(el){el.setAttribute('data-cu','1');count(el)})}
 new P.MutationObserver(scan).observe(D.body,{childList:true,subtree:true});scan()})();
 </script>"""
