@@ -9,7 +9,7 @@
 ![XGBoost](https://img.shields.io/badge/Model-XGBoost-189AB4)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikitlearn&logoColor=white)
 ![NetworkX](https://img.shields.io/badge/Graphs-NetworkX-2C7BB6)
-![Tests](https://img.shields.io/badge/tests-7%20passed-brightgreen)
+![CI](https://github.com/Roopanshi-Marwaha/Launder-Lens/actions/workflows/ci.yml/badge.svg)
 
 *Can fraud detectors recognise laundering they have never seen, and does graph structure help once the amount "shortcut" is removed?*
 
