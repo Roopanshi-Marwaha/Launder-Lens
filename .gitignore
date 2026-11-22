@@ -1,8 +1,22 @@
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
 .venv/
 venv/
+
+# Editors / OS
 .vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/
+
+# Data (raw AMLSim CSVs are too large to track)
 data/processed/
 data/raw/*.csv
-.pytest_cache/
