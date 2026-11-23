@@ -101,6 +101,11 @@ attacks its own detectors &mdash; and shows exactly where they break and how to 
     for col, (n, t, b) in zip(cols, acts):
         col.markdown(f'<div class="card"><div class="act"><div class="n">{n}</div><div><h4>{t}</h4><p>{b}</p></div></div></div>', unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
+    dial = st.select_slider("Attack dial: how well does the launderer disguise the amounts?", options=[0.0, 0.25, 0.5, 0.75, 1.0], value=0.0,
+                            key="mc_camo", format_func=lambda v: {0.0: "0 · naive", 1.0: "1 · fully disguised"}.get(v, f"{v:g}"))
+    ui.scoreboard("Red team vs blue team", f"average precision at camouflage {dial:g}",
+                  [(label(m), g(m, dial, 0), color(m), g(m, 0.0, 0))
+                   for m in ["rules", "xgb_amount", "xgb_all", "xgb_structure", "xgb_structure_hardened", "gnn_structure_hardened"]])
     fig = go.Figure()
     for m in ["rules", "xgb_amount", "xgb_all", "xgb_structure", "xgb_structure_hardened", "gnn_structure_hardened"]:
         d = rb[(rb.model == m) & (rb.patience == 0)].sort_values("camouflage")

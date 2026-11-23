@@ -195,8 +195,38 @@ h1{word-break:break-word}
 """
 
 
+CSS_BOARD = r"""
+<style>
+/* hero: Streamlit adds padding/margins to headings that left a big gap under the title */
+.hero h1{padding:0!important;margin:.35rem 0 1rem!important;line-height:1.06!important}.hero h1 em{display:block!important;line-height:1.06!important}
+.hero p{margin:0!important}.hero h1 [data-testid="stHeaderActionElements"]{display:none!important}
+/* attack-dial scoreboard */
+.board{border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,var(--panel2),var(--panel));padding:1.1rem 1.25rem 1.2rem;margin:.4rem 0 1.2rem}
+.board .bh{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.4rem;margin-bottom:.9rem}
+.board .bh .t{font:600 1.05rem var(--serif);color:#f2efe9}
+.board .bh .s{font:500 .66rem var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.brow{display:grid;grid-template-columns:minmax(120px,190px) 1fr 215px;align-items:center;gap:.9rem;padding:.42rem 0}
+.brow .nm{font:500 .86rem var(--sans);color:#d5dae3;line-height:1.2}
+.brow .tr{position:relative;height:14px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+.brow .fl{height:100%;border-radius:99px;transform-origin:left;animation:bgrow .9s cubic-bezier(.2,.8,.2,1) both;box-shadow:0 0 14px -2px currentColor}
+@keyframes bgrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.brow .vl{display:flex;align-items:center;gap:.55rem;justify-content:flex-end;width:100%}
+.brow .vl b{font:600 1.02rem var(--serif);color:#fff;min-width:2.6rem;text-align:right}
+.brow .vl i{font:normal 500 .66rem var(--mono);color:var(--muted);min-width:3rem;text-align:right}
+.verdict{font:600 .6rem var(--mono);letter-spacing:.1em;padding:.18rem .5rem;border-radius:99px;border:1px solid;white-space:nowrap}
+.verdict.ok{color:#8af0e0;border-color:rgba(61,214,192,.5);background:rgba(61,214,192,.1)}
+.verdict.mid{color:#ffd47a;border-color:rgba(255,190,70,.5);background:rgba(255,190,70,.1)}
+.verdict.bad{color:#ffb4a5;border-color:rgba(255,90,60,.55);background:rgba(255,90,60,.12)}
+@media (max-width:640px){
+.brow{grid-template-columns:1fr auto;grid-template-areas:"nm vl" "tr tr";row-gap:.35rem}
+.brow .nm{grid-area:nm}.brow .vl{grid-area:vl;min-width:0}.brow .tr{grid-area:tr}
+.brow .vl i{display:none}}
+</style>
+"""
+
+
 def inject_css():
-    st.markdown(CSS + CSS_FX + CSS_NAV, unsafe_allow_html=True)
+    st.markdown(CSS + CSS_FX + CSS_NAV + CSS_BOARD, unsafe_allow_html=True)
     fx()
     tape()
 
@@ -211,6 +241,19 @@ def status_panel(items):
     rows = "".join(f'<div class="r {"ok" if ok else "no"}"><span><span class="dot"></span>{l}</span><b>{d}</b></div>'
                    for l, ok, d in items)
     st.markdown(f'<div class="sysmon"><div class="h">System status</div>{rows}</div>', unsafe_allow_html=True)
+
+
+def scoreboard(title, sub, rows):
+    """rows: [(label, ap, colour, ap_at_clean)] -> animated horizontal bars with a verdict badge."""
+    out = []
+    for lab, ap, col, base in sorted(rows, key=lambda r: -r[1]):
+        v, cls = ("SURVIVES", "ok") if ap >= 0.6 else (("DEGRADED", "mid") if ap >= 0.3 else ("BROKEN", "bad"))
+        d = ap - base
+        delta = "" if abs(d) < 0.005 else f"{'▼' if d < 0 else '▲'} {abs(d):.2f}"
+        out.append(f'<div class="brow"><div class="nm">{lab}</div><div class="tr"><div class="fl" style="width:{max(ap, 0.02) * 100:.0f}%;'
+                   f'background:{col};color:{col}"></div></div><div class="vl"><i>{delta}</i><b>{ap:.2f}</b><span class="verdict {cls}">{v}</span></div></div>')
+    st.markdown(f'<div class="board"><div class="bh"><div class="t">{title}</div><div class="s">{sub}</div></div>{"".join(out)}</div>',
+                unsafe_allow_html=True)
 
 
 def page_head(kicker, title, sub):
