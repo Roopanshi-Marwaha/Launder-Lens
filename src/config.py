@@ -1,4 +1,4 @@
-"""Central paths and constants for Launder Lens 2.0."""
+"""Central paths and constants for Launder Lens."""
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]

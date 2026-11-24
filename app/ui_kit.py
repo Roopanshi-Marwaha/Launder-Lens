@@ -235,7 +235,7 @@ def inject_css():
 
 def brand():
     st.markdown('<div class="brand"><div class="mark"></div><div><div class="name">Launder Lens</div>'
-                '<div class="tag">Financial crime lab 2.0</div></div></div>', unsafe_allow_html=True)
+                '<div class="tag">Financial crime lab</div></div></div>', unsafe_allow_html=True)
 
 
 def status_panel(items):

@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔍 Launder Lens 2.0
+# 🔍 Launder Lens
 
 ### Red team vs blue team for graph-based money-laundering detection
 

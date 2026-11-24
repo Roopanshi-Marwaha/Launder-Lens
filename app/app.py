@@ -1,4 +1,4 @@
-"""Launder Lens 2.0 - Streamlit investigation platform.   Run:  python -m streamlit run app/app.py"""
+"""Launder Lens - Streamlit investigation platform.   Run:  python -m streamlit run app/app.py"""
 import sys, time, json, pickle
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,7 +15,7 @@ import ui_kit as ui
 from ui_kit import C, label, color
 from graph_views import detection_graph, ring_graph, STATUS
 
-st.set_page_config(page_title="Launder Lens 2.0", page_icon="🔎", layout="wide", initial_sidebar_state="auto")
+st.set_page_config(page_title="Launder Lens", page_icon="🔎", layout="wide", initial_sidebar_state="auto")
 ui.inject_css()
 
 SCEN_LABEL = {"naive": "Naive launderer", "camouflaged": "Camouflaged amounts", "patient": "Camouflaged + patient"}
@@ -68,7 +68,7 @@ def need_or_stop(*objs):
 def page_home():
     c1, c2 = st.columns([1.25, 1], gap="medium")
     with c1:
-        st.markdown("""<div class="hero"><div class="kicker"><span class="live"></span>Launder Lens 2.0 &middot; financial crime lab</div>
+        st.markdown("""<div class="hero"><div class="kicker"><span class="live"></span>Launder Lens &middot; financial crime lab</div>
 <h1>We built a fraud detector. <em>Then we tried to launder past it.</em></h1>
 <p>Money laundering hides in networks, not in single transactions. Launder Lens simulates laundering rings, hunts them with graph machine learning,
 attacks its own detectors &mdash; and shows exactly where they break and how to harden them.</p>
