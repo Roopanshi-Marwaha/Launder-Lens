@@ -4,7 +4,7 @@
 
 ### Red team vs blue team for graph-based money-laundering detection
 
-![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/App-Streamlit-FF4B4B?logo=streamlit&logoColor=white)
 ![XGBoost](https://img.shields.io/badge/Model-XGBoost-189AB4)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikitlearn&logoColor=white)
@@ -68,7 +68,7 @@ Simulation Lab ───────┘            │
 
 ## Quick start
 
-Requires **Python 3.11 or newer**.
+Requires **Python 3.12 or newer**.
 
 ```bash
 git clone https://github.com/Roopanshi-Marwaha/Launder-Lens.git
@@ -98,7 +98,7 @@ python -m src.run_pipeline            # add --quick for a 2-3 minute version
 python -m pytest -q                   # 14 tests, incl. cycle counts verified against networkx
 ```
 
-Tests also run automatically on every push and pull request through GitHub Actions (Python 3.11 and 3.12).
+Tests also run automatically on every push and pull request through GitHub Actions (Python 3.12).
 
 ## Data
 
