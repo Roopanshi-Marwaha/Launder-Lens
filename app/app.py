@@ -113,9 +113,9 @@ attacks its own detectors &mdash; and shows exactly where they break and how to 
                                  line=dict(color=color(m), width=3 if "hardened" in m else 2, dash="solid" if "hardened" in m or m in ("xgb_amount", "xgb_all") else "dot"),
                                  marker=dict(size=8)))
     fig.update_layout(title="Disguise the amounts, and the detectors that relied on them collapse",
-                      xaxis_title="Amount camouflage (0 = naive launderer, 1 = amounts indistinguishable from normal traffic)", yaxis_title="Average precision (PR-AUC)",
+                      xaxis_title="Amount camouflage (0 = naive launderer, 1 = indistinguishable from normal traffic)",
                       yaxis_range=[0, 1.02])
-    ui.plot(fig, 420, key="home_curve")
+    ui.plot(fig, 480, key="home_curve")
     ui.insight("<b>Why this matters.</b> A detector that scores 0.9 on a benchmark can be defeated by a launderer who simply changes how much money moves. "
                "Structure and timing are far harder to fake - and that is what graph machine learning can exploit.")
 

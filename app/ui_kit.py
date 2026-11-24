@@ -279,7 +279,8 @@ def legend(items):
 def plot(fig, h=380, key=None):
     fig.update_layout(height=h, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
                       font=dict(family="IBM Plex Sans, system-ui, sans-serif", color="#c9d1d9", size=12),
-                      margin=dict(l=10, r=10, t=40, b=10), legend=dict(bgcolor="rgba(0,0,0,0)", orientation="h", y=-0.2),
+                      margin=dict(l=10, r=10, t=40, b=70 if sum(1 for t in fig.data if t.name) > 1 else 10),
+                      legend=dict(bgcolor="rgba(0,0,0,0)", orientation="h", yanchor="top", y=-0.28, xanchor="left", x=0),
                       title_font=dict(family="Fraunces, Georgia, serif", size=16, color="#e8e6df"))
     fig.update_xaxes(gridcolor="rgba(255,255,255,.06)", zerolinecolor="rgba(255,255,255,.1)")
     fig.update_yaxes(gridcolor="rgba(255,255,255,.06)", zerolinecolor="rgba(255,255,255,.1)")
