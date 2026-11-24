@@ -39,7 +39,7 @@ html,body,[class*="css"],.stApp{font-family:var(--sans)!important;color:var(--te
 .stApp:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;
 background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:48px 48px;
 -webkit-mask-image:radial-gradient(ellipse at 50% 0%,#000 30%,transparent 75%);mask-image:radial-gradient(ellipse at 50% 0%,#000 30%,transparent 75%)}
-header[data-testid="stHeader"]{background:transparent}#MainMenu,footer,[data-testid="stToolbar"]{visibility:hidden}
+header[data-testid="stHeader"]{background:rgba(7,10,15,.82);backdrop-filter:blur(8px)}#MainMenu,footer,[data-testid="stToolbar"]{visibility:hidden}
 .block-container{padding-top:1.6rem;padding-bottom:4rem;max-width:1320px}
 h1,h2,h3{font-family:var(--serif)!important;letter-spacing:-.01em;font-weight:600}
 h3{font-size:1.35rem!important}
@@ -71,7 +71,7 @@ h3{font-size:1.35rem!important}
 .kpi .s{font-size:.8rem;color:#98a2b0;line-height:1.4}
 .card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.25rem;height:100%}
 .card h4{font:600 1.05rem var(--serif);margin:0 0 .45rem}.card p,.card li{color:#aeb6c2;font-size:.9rem;line-height:1.55}
-.act{display:flex;gap:.9rem}.act .n{font:800 2.4rem var(--serif);color:var(--signal);opacity:.9;line-height:1}
+.act{display:flex;flex-direction:column;gap:.45rem}.card h4,.card p{overflow-wrap:break-word;word-break:normal;hyphens:auto}.act .n{font:800 2.4rem var(--serif);color:var(--signal);opacity:.9;line-height:1}
 .chip{display:inline-block;font:500 .7rem var(--mono);letter-spacing:.06em;padding:.22rem .6rem;border-radius:99px;border:1px solid var(--line);color:#c4cbd6;margin:0 .3rem .3rem 0;background:rgba(255,255,255,.03)}
 .chip.red{color:#ffb4a5;border-color:rgba(255,90,60,.5);background:rgba(255,90,60,.1)}.chip.teal{color:#8af0e0;border-color:rgba(61,214,192,.45);background:rgba(61,214,192,.08)}.chip.amber{color:#ffd599;border-color:rgba(255,179,71,.45);background:rgba(255,179,71,.08)}
 .flow{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin:.4rem 0 1rem}.flow .st{padding:.5rem .9rem;border:1px solid var(--line);border-radius:10px;background:var(--panel);font:600 .85rem var(--sans)}.flow .ar{color:var(--signal);font-family:var(--mono)}
