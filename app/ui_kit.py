@@ -1,5 +1,6 @@
 """Launder Lens design system: 'forensic ledger' - ink-black canvas, bone-white type, one signal colour."""
 import json
+from html import escape
 from pathlib import Path
 import streamlit as st
 import streamlit.components.v1 as components
@@ -76,6 +77,7 @@ h3{font-size:1.35rem!important}
 .chip.red{color:#ffb4a5;border-color:rgba(255,90,60,.5);background:rgba(255,90,60,.1)}.chip.teal{color:#8af0e0;border-color:rgba(61,214,192,.45);background:rgba(61,214,192,.08)}.chip.amber{color:#ffd599;border-color:rgba(255,179,71,.45);background:rgba(255,179,71,.08)}
 .flow{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin:.4rem 0 1rem}.flow .st{padding:.5rem .9rem;border:1px solid var(--line);border-radius:10px;background:var(--panel);font:600 .85rem var(--sans)}.flow .ar{color:var(--signal);font-family:var(--mono)}
 .legend{display:flex;flex-wrap:wrap;gap:1rem;font:400 .75rem var(--mono);color:#aab2be;margin:.3rem 0 .6rem}.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:.4rem;vertical-align:-1px}
+.ctitle{font:600 1rem var(--serif);color:var(--text);line-height:1.3;margin:.9rem 0 .15rem}
 .insight{border-left:3px solid var(--signal);background:rgba(255,90,60,.06);padding:.8rem 1rem;border-radius:0 12px 12px 0;color:#d6dae1;font-size:.93rem;line-height:1.55;margin:.6rem 0 1rem}
 .case{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.3rem;line-height:1.65;font-size:.95rem}
 .stButton>button,.stFormSubmitButton>button{border-radius:11px;border:1px solid rgba(255,90,60,.55);background:linear-gradient(180deg,rgba(255,90,60,.25),rgba(255,90,60,.1));color:#fff;font-weight:600;transition:.15s}
@@ -276,13 +278,23 @@ def legend(items):
                 unsafe_allow_html=True)
 
 
+def wrap_label(text, width=12):
+    """Break a long category label onto two lines so bar-chart x ticks stay horizontal."""
+    return text.replace(" ", "<br>", 1) if len(text) > width and " " in text else text
+
+
 def plot(fig, h=380, key=None):
+    title = fig.layout.title.text
+    if title:  # an HTML title wraps on phones; a Plotly title gets clipped and sits under the modebar
+        st.markdown(f'<div class="ctitle">{escape(str(title))}</div>', unsafe_allow_html=True)
+        fig.update_layout(title=None)
+    top = 40 if len(fig.layout.annotations) else 16
     fig.update_layout(height=h, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
                       font=dict(family="IBM Plex Sans, system-ui, sans-serif", color="#c9d1d9", size=12),
-                      margin=dict(l=10, r=10, t=40, b=70 if sum(1 for t in fig.data if t.name) > 1 else 10),
-                      legend=dict(bgcolor="rgba(0,0,0,0)", orientation="h", yanchor="top", y=-0.28, xanchor="left", x=0),
+                      margin=dict(l=10, r=10, t=top, b=10),
+                      legend=dict(bgcolor="rgba(0,0,0,0)", orientation="h", yref="container", y=0, yanchor="bottom", xanchor="left", x=0),
                       title_font=dict(family="Fraunces, Georgia, serif", size=16, color="#e8e6df"))
-    fig.update_xaxes(gridcolor="rgba(255,255,255,.06)", zerolinecolor="rgba(255,255,255,.1)")
+    fig.update_xaxes(gridcolor="rgba(255,255,255,.06)", zerolinecolor="rgba(255,255,255,.1)", automargin=True)
     fig.update_yaxes(gridcolor="rgba(255,255,255,.06)", zerolinecolor="rgba(255,255,255,.1)")
     try:
         st.plotly_chart(fig, width="stretch", key=key)

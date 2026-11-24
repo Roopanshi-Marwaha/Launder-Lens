@@ -113,7 +113,7 @@ attacks its own detectors &mdash; and shows exactly where they break and how to 
                                  line=dict(color=color(m), width=3 if "hardened" in m else 2, dash="solid" if "hardened" in m or m in ("xgb_amount", "xgb_all") else "dot"),
                                  marker=dict(size=8)))
     fig.update_layout(title="Disguise the amounts, and the detectors that relied on them collapse",
-                      xaxis_title="Amount camouflage (0 = naive launderer, 1 = indistinguishable from normal traffic)",
+                      xaxis_title="Amount camouflage (0 = naive, 1 = fully disguised)",
                       yaxis_range=[0, 1.02])
     ui.plot(fig, 480, key="home_curve")
     ui.insight("<b>Why this matters.</b> A detector that scores 0.9 on a benchmark can be defeated by a launderer who simply changes how much money moves. "
@@ -232,7 +232,7 @@ def page_time():
                                                  median_latency=("latency", "median")).reset_index()
         s["Typology"] = s.typology.map(TYPOLOGY_LABELS); s["Detector"] = s.model.map(label)
         s["Detected"] = (s.detected * 100).round(0).astype(int).astype(str) + "%"
-        s["Median latency (steps)"] = s.median_latency.round(0)
+        s["Median latency (steps)"] = s.median_latency.map(lambda v: "–" if pd.isna(v) else f"{v:.0f}")
         st.markdown("##### Detection latency per ring")
         ui.table(s[["Detector", "Typology", "rings", "Detected", "Median latency (steps)"]].rename(columns={"rings": "Rings"}))
 
@@ -271,10 +271,8 @@ def page_case():
         ui.legend([("entry point", C["teal"]), ("exit point", C["amber"]), ("intermediary", C["signal"])])
         ui.network(nodes, edges, 470, hierarchical=hier)
     with c2:
-        st.markdown(f'<div class="case">{case_narrative(ring, reasons, truth).replace(chr(10), "<br>")}</div>'.replace("**", ""), unsafe_allow_html=False) if False else None
-        st.markdown(f'<div class="case">', unsafe_allow_html=True)
-        st.markdown(case_narrative(ring, reasons, truth))
-        st.markdown("</div>", unsafe_allow_html=True)
+        with st.container(border=True):
+            st.markdown(case_narrative(ring, reasons, truth))
     t1, t2, t3, t4 = st.tabs(["Risk drivers", "Money trace", "Accounts", "Case file"])
     with t1:
         acc = st.selectbox("Account", sorted(ring["members"], key=lambda m: -scores[m]), format_func=lambda m: f"account {m} · risk {scores[m]:.2f}")
@@ -339,8 +337,8 @@ def page_evidence():
         order = ["rules", "xgb_amount", "xgb_structure", "gnn_structure", "rf_all", "gnn_all", "xgb_all"]
         a = am.set_index("model").loc[order].reset_index()
         f = go.Figure()
-        f.add_trace(go.Bar(x=[label(m) for m in a.model], y=a.f1_mean, error_y=dict(type="data", array=a.f1_std), name="F1", marker_color=[color(m) for m in a.model]))
-        f.add_trace(go.Scatter(x=[label(m) for m in a.model], y=a.ap_mean, name="PR-AUC", mode="markers", marker=dict(size=13, symbol="diamond", color="#fff", line=dict(color="#000", width=1))))
+        f.add_trace(go.Bar(x=[ui.wrap_label(label(m)) for m in a.model], y=a.f1_mean, error_y=dict(type="data", array=a.f1_std), name="F1", marker_color=[color(m) for m in a.model]))
+        f.add_trace(go.Scatter(x=[ui.wrap_label(label(m)) for m in a.model], y=a.ap_mean, name="PR-AUC", mode="markers", marker=dict(size=13, symbol="diamond", color="#fff", line=dict(color="#000", width=1))))
         f.update_layout(title="Ring-grouped 5-fold cross-validation (mean ± std)", yaxis_range=[0, 1.05])
         ui.plot(f, 380, key="am_bar")
         ui.insight("Grouped folds keep every laundering ring entirely inside train <i>or</i> test, so rings cannot be memorised. "
@@ -351,7 +349,7 @@ def page_evidence():
             ptp = pt.pivot(index="model", columns="typology", values="recall").loc[["rules", "xgb_amount", "xgb_structure", "xgb_all"]]
             f = go.Figure()
             for t, nm in [("cycle", "Cycle rings"), ("fan_in", "Fan-in rings")]:
-                f.add_trace(go.Bar(x=[label(m) for m in ptp.index], y=ptp[t], name=nm))
+                f.add_trace(go.Bar(x=[ui.wrap_label(label(m)) for m in ptp.index], y=ptp[t], name=nm))
             f.update_layout(barmode="group", title="Recall by laundering typology", yaxis_range=[0, 1.05], colorway=[C["signal"], C["teal"]])
             with c1:
                 ui.plot(f, 340, key="am_typ")
