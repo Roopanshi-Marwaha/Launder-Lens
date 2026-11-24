@@ -10,8 +10,11 @@
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikitlearn&logoColor=white)
 ![NetworkX](https://img.shields.io/badge/Graphs-NetworkX-2C7BB6)
 ![CI](https://github.com/Roopanshi-Marwaha/Launder-Lens/actions/workflows/ci.yml/badge.svg)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://launder-lens-8ey7c9wal7hr4f7wj4kmfq.streamlit.app)
 
 *Can fraud detectors recognise laundering they have never seen, and does graph structure help once the amount "shortcut" is removed?*
+
+**[Explore the live demo](https://launder-lens-8ey7c9wal7hr4f7wj4kmfq.streamlit.app)**
 
 </div>
 
@@ -22,6 +25,17 @@
 Most fraud models look great on a benchmark and then quietly fall apart when the attacker changes behaviour. **Launder Lens** puts that to the test.
 
 It benchmarks detectors on the IBM **AMLSim** data (Kaggle), then builds its own **Financial Crime Simulation Lab** with 5 laundering typologies, legitimate decoys and two attacker knobs, so we can attack and harden the detectors like a real red team / blue team exercise. Everything is wrapped in an interactive **investigation app** for exploring results, replaying detection over time and opening individual cases.
+
+> **In one line:** under full camouflage, a structure-first detector catches **85%** of laundering rings, while the amount-reliant hybrid catches only **12%**.
+
+<!--
+Add screenshots here once you have them, e.g.:
+
+<p align="center">
+  <img src="docs/mission_control.png" width="48%" alt="Mission Control" />
+  <img src="docs/time_machine.png" width="48%" alt="Time Machine" />
+</p>
+-->
 
 ## Key findings
 
@@ -34,7 +48,7 @@ It benchmarks detectors on the IBM **AMLSim** data (Kaggle), then builds its own
 | 5 | Adversarial hardening lifts the hybrid back up | Back to **0.74** under full camouflage |
 | 6 | Structure-first catches rings far earlier under camouflage | **85%** of rings detected (median ~22 steps) vs **12%** for the amount-reliant hybrid |
 
-> **Takeaway:** amounts are easy for an attacker to disguise, while graph structure and timing are much harder to fake. Detectors built on structure keep working when attackers adapt.
+> **Takeaway:** amounts are easy for an attacker to disguise, while graph structure and timing are much harder to fake. Detectors built on structure keep working when attackers adapt. Under camouflage, that is the difference between catching **85%** of rings and catching **12%**.
 
 ## How it works
 
@@ -69,6 +83,10 @@ Simulation Lab ───────┘            │
 ## Quick start
 
 Requires **Python 3.12 or newer**.
+
+Don't want to install anything? Use the hosted version: **https://launder-lens-8ey7c9wal7hr4f7wj4kmfq.streamlit.app**
+
+To run it locally:
 
 ```bash
 git clone https://github.com/Roopanshi-Marwaha/Launder-Lens.git
