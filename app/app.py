@@ -364,15 +364,17 @@ def page_evidence():
             ui.plot(f, 340, key="am_shap")
     with t2:
         models = ["xgb_amount", "xgb_all", "xgb_structure", "xgb_structure_hardened", "gnn_structure_hardened", "xgb_all_hardened"]
-        fig = make_subplots(rows=2, cols=3, subplot_titles=[label(m) for m in models], horizontal_spacing=.06, vertical_spacing=.18)
+        fig = make_subplots(rows=2, cols=3, subplot_titles=[label(m) for m in models], horizontal_spacing=.08, vertical_spacing=.2)
         scale = [[0, "#1a0f12"], [.35, "#ff5a3c"], [.7, "#ffb347"], [1, "#3dd6c0"]]
         for k, m in enumerate(models):
             d = rb[rb.model == m].pivot(index="patience", columns="camouflage", values="ap")
             fig.add_trace(go.Heatmap(z=d.values, x=[f"{c:g}" for c in d.columns], y=[f"{p:g}" for p in d.index], zmin=0, zmax=1, colorscale=scale, showscale=k == 5,
                                      text=np.round(d.values, 2), texttemplate="%{text}", hovertemplate="camouflage %{x}<br>patience %{y}<br>AP %{z:.2f}<extra></extra>"),
                           row=k // 3 + 1, col=k % 3 + 1)
-        fig.update_xaxes(title_text="camouflage", title_font_size=10); fig.update_yaxes(title_text="patience", title_font_size=10)
-        fig.update_layout(title="Average precision under attack (rows: patience, columns: camouflage)")
+        fig.update_xaxes(title_text="camouflage", title_font_size=10, row=2, col=2)
+        fig.update_yaxes(title_text="patience", title_font_size=10, row=1, col=1)
+        fig.update_yaxes(title_text="patience", title_font_size=10, row=2, col=1)
+        st.markdown("**Average precision under attack** &nbsp;·&nbsp; rows: patience, columns: camouflage")
         ui.plot(fig, 560, key="rb_heat")
         w = lambda m: rb[rb.model == m].ap.min()
         ui.insight(f"<b>Red team:</b> camouflage destroys amount features (amount-only worst AP {w('xgb_amount'):.2f}); patience degrades timing features. "
